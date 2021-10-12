@@ -1,0 +1,20 @@
+# Notes:
+# ctrl-C or ctrl-break to stop server
+
+https://channels.readthedocs.io/en/stable/tutorial/part_2.html
+When Django accepts an HTTP request, it consults the root URLconf to lookup a view function,
+and then calls the view function to handle the request.
+Similarly, when Channels accepts a WebSocket connection, it consults the root routing configuration to
+lookup a consumer, and then calls various functions on the consumer to handle events from the connection.
+We will write a basic consumer that accepts WebSocket connections on the path /ws/chat/ROOM_NAME/
+that takes any message it receives on the WebSocket and echos it back to the same WebSocket.
+
+It is good practice to use a common path prefix like /ws/ to distinguish WebSocket connections from ordinary HTTP connections
+
+NOTES ON DOCKER from startup tutorial:
+docker run -d -p 80:80 docker/getting-started
+You'll notice a few flags being used. Here's some more info on them:
+    -d - run the container in detached mode (in the background)
+    -p 80:80 - map port 80 of the host to port 80 in the container
+    docker/getting-started - the image to use
+
