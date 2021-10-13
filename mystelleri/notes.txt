@@ -1,6 +1,22 @@
 # Notes:
 # ctrl-C or ctrl-break to stop server
 
+#Gotta get redis server going with this. Can check on it using Docker Desktop...
+docker run -p 6379:6379 -d redis:5
+
+#From django-channels tutorial:
+#Let’s make sure that the channel layer can communicate with Redis. Open a Django shell and run the following commands:
+python3 manage.py shell
+import channels.layers
+channel_layer = channels.layers.get_channel_layer()
+from asgiref.sync import async_to_sync
+async_to_sync(channel_layer.send)('test_channel', {'type': 'hello'})
+async_to_sync(channel_layer.receive)('test_channel')
+# should get: {'type': 'hello'}
+quit()   #close manage.py shell
+
+
+
 https://channels.readthedocs.io/en/stable/tutorial/part_2.html
 When Django accepts an HTTP request, it consults the root URLconf to lookup a view function,
 and then calls the view function to handle the request.

@@ -138,9 +138,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 ASGI_APPLICATION = "mystelleri.asgi.application" #Added for Channels (websockets)
 CHANNEL_LAYERS = {
     'default': {
+        # "BACKEND": "channels.layers.InMemoryChannelLayer",
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [('127.0.0.1', 6379)],
+            "hosts": [('127.0.0.1', 6379)], #Even though manage.py runserver is on :8000
         },
     },
 }
