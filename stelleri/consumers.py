@@ -32,8 +32,6 @@ class ChatConsumer(WebsocketConsumer):
         # It is recommended that accept() be called as the LAST action in connect()
         self.accept()
 
-
-
     def disconnect(self, close_code):
         # Leave room group
         async_to_sync(self.channel_layer.group_discard)(
