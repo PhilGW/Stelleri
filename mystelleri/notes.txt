@@ -1,6 +1,12 @@
-# Notes:
+# Pycharm shortcut reminders:
 # ctrl-C or ctrl-break to stop server
-#ctrl-q when you're on a function to get help for it
+# ctrl-q when you're on a function to get help for it
+
+#Conventions:
+# A 'device' is an actual computer, like a Raspberry Pi
+# Any device can have 1 or more 'controllers'. Each controller runs a control loop that monitors/controls various I/O devices
+
+
 #Gotta get redis server going with this. Can check on it using Docker Desktop...
 docker run -p 6379:6379 -d redis:5
 

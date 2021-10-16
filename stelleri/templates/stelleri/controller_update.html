@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Your controller</title>
+</head>
+<body>
+    Adjust timing for controller: <br>
+    <input id="param-name-input" type="text" size="100"><br>
+    <input id="param-value-input" type="text" size="100"><br>
+    <input id="param-change-submit" type="button" value="Enter">
+
+    Recently received messages: <br>
+    <textarea id="incoming-log" cols="100" rows="20"></textarea><br>
+
+    <script>
+        {#const roomName = JSON.parse(document.getElementById('room-name').textContent);#}
+        {#const deviceId = JSON.parse(document.getElementById('device-id').textContent);#}
+        console.log('Creating page...');
+        const controllerSocket = new WebSocket('ws://127.0.0.1:8000/ws/devices/1');
+        {#const controllerSocket = new WebSocket('ws://' + window.location.host + '/ws/devices/1/');#}
+        console.log('Just tried to create page......');
+        {#'ws://' + window.location.host + '/ws/stelleri/' + roomName + '/' ); #}
+        //When a new incoming message is received, add it to the log textarea:
+
+        controllerSocket.onmessage = function(e) {
+            console.log('Browser received a message!')
+            console.log(e.data)
+            const data = JSON.parse(e.data);
+            console.log(data)
+            document.querySelector('#incoming-log').value += (data.message + '\n');
+        };
+        //If the websocket closes, log it to the browser console:
+        controllerSocket.onclose = function(e) {console.error('Chat socket closed unexpectedly'); };
+        
+        //This would enable keyboard ENTER instead of clicking button, if desired:
+        {#document.querySelector('#param-name-input').focus();#}
+        {#document.querySelector('#param-name-input').onkeyup = function(e) {#}
+        {#    if (e.keyCode === 13) {  // enter, return#}
+        {#        document.querySelector('#param-change-submit').click();#}
+        {#    }#}
+        {# }; #}
+
+        document.querySelector('#param-change-submit').onclick = function(e) {
+            console.log('Attempting to send parameter change....');
+            const newParamNameDom = document.querySelector('#param-name-input');
+            const newParamValueDom = document.querySelector('#param-value-input');
+            const newParamName = newParamNameDom.value;
+            const newParamValue = newParamValueDom.value;
+            var jsonMsg = JSON.stringify({
+                'topic':'param_update_request_from_ui',
+                'param_name': newParamName,
+                'param_value':newParamValue
+            });
+            console.log(jsonMsg)
+            controllerSocket.send(jsonMsg)
+            {#controllerSocket.send(JSON.stringify({#}
+            {#    'type':'param_update',#}
+            {#    'param_name': newParamName,#}
+            {#    'param_value':newParamValue#}
+            {# }));#}
+            console.log('...Parameter change sent!');
+            newParamNameDom.value = 'just sent!';
+            newParamValueDom.value = '';
+
+        };
+    </script>
+</body>
+</html>

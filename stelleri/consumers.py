@@ -46,7 +46,6 @@ class ChatConsumer(WebsocketConsumer):
     def receive(self, text_data):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
-
         # Send message to room group. An event has a special 'type' key corresponding to the name of the method
         # that should be invoked on consumers that receive the event.
         async_to_sync(self.channel_layer.group_send)(
@@ -70,8 +69,9 @@ class ChatConsumer(WebsocketConsumer):
 class DeviceConsumer(WebsocketConsumer):
     def connect(self):
         self.device_name = "device_" + self.scope['url_route']['kwargs']['device_id']
-        print("This device is connecting. It shall be called: ", self.device_name)
         self.group_name = "all_devices"
+        print("This device is connecting. It shall be called: ", self.device_name)
+        print("This device's group name shall be: ", self.group_name)
 
         # Join room group
         async_to_sync(self.channel_layer.group_add)(
@@ -93,28 +93,72 @@ class DeviceConsumer(WebsocketConsumer):
     # Handle incoming WebSocket data, and divvy it up among potential other functions based on the content:
     def receive(self, text_data):
         print("text_data received: ", text_data)
-        print("Type: ", type(text_data))
-        # text_data_json = json.loads(text_data)
-        #message = text_data_json['message']
-        #print("Message recieved: ", message)
         # Send message to room group. An event has a special 'type' key corresponding to the name of the method
         # that should be invoked on consumers that receive the event.
+        text_data_json = json.loads(text_data)
+        # message = text_data_json['message']
 
-        # Send the message along to the log_data() method
+        # Send message to room group
         async_to_sync(self.channel_layer.group_send)(
             self.group_name,
             {
-                'type': 'log_data',
+                'type': 'dev_message',
                 'message': text_data
             }
         )
 
-    # Receive message from room group:
-    def log_data(self, event): #Name is the same as the "type:" in the dict() above
-        message = event['message']
-        print ("Holy crap! the message was received: ", message)
+    # Receive message from room group
+    def dev_message(self, event):
+        msg = json.loads(event['message'])
+        print("new message: ", msg)
         # Send message to WebSocket
-        self.send(text_data="Back atcha")
-        # self.send(text_data=json.dumps({
-        #     'message': message
-        # }))
+        topic = msg.pop('topic')
+        #TODO: Error handling if topic is not one of these categories
+        if topic == 'new_data':
+            print("New data incoming: ", msg)
+            self.send(json.dumps({'topic': 'receipt_confirmation'}) )
+        elif topic == 'param_update_request_from_ui':
+            print('msg type: ', type(msg))
+            msg['topic'] = 'param_update'
+            print("Param update requested by browser, relaying to controller: ", msg)
+            self.send(text_data=json.dumps(msg))
+
+
+# class DeviceConsumer(SyncConsumer):
+#     def websocket_connect(self, event):
+#         self.device_name = "device_" + self.scope['url_route']['kwargs']['device_id']
+#         self.group_name = "all_devices"
+#         print("This device is connecting. It shall be called: ", self.device_name)
+#         print("This device's group name shall be: ", self.group_name)
+#
+#         # If you do not call accept() within the connect() method then the connection will be rejected and closed.
+#         # You might want to reject a connection for example because the requesting user is not authorized to perform the requested action.
+#         # It is recommended that accept() be called as the LAST action in connect()
+#         self.send({
+#             "type": "websocket.accept",
+#         })
+#
+#     #The 'event' is a dict() sent via websockets. It has format:
+#     #{'type':'websocket.receive', 'text':'text sent over websocket'}
+#     #TODO: Figure out if I actually need Channel Layers. If not, I might be able to ditch Redis and the accompanying deployment headaches.
+#     def websocket_receive(self, event):
+#         print("Event: ", event)
+#         msg  =  json.loads(event['text']) #msg is the actual meat of the websockets message, as a dict()
+#         topic = msg.pop('topic')
+#         #TODO: Error handling if topic is not one of these categories
+#         if topic == 'new_data':
+#             print("New data incoming: ", msg)
+#             self.send({
+#                 "type": "websocket.send",
+#                 "text": json.dumps({'topic': 'receipt_confirmation'}),
+#             })
+#         elif topic == 'param_update_request_from_ui':
+#             print('msg type: ', type(msg))
+#             msg['topic'] = 'param_update'
+#             print("Param update requested by browser, relaying to controller: ", msg)
+#             self.send({
+#                 "type": "websocket.send",
+#                 "text": json.dumps({'topic': 'receipt_confirmation'}),
+#                 #"text": json.dumps(msg),
+#             })
+#             print("...Just sent it!")
