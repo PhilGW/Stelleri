@@ -1,10 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Your controller</title>
-</head>
-<body>
+{% extends "base.html" %}
+{#{% load staticfiles %}#}
+
+{% block title %}Configure Controller{% endblock title %}
+
+{% block plotnav %}
+    Configure the controller here.
+{% endblock plotnav %}
+
+<!-- Display the main area of the page -->
+{% block content %}
     Adjust timing for controller: <br>
     <input id="param-name-input" type="text" size="100"><br>
     <input id="param-value-input" type="text" size="100"><br>
@@ -32,7 +37,7 @@
         };
         //If the websocket closes, log it to the browser console:
         controllerSocket.onclose = function(e) {console.error('Chat socket closed unexpectedly'); };
-        
+
         //This would enable keyboard ENTER instead of clicking button, if desired:
         {#document.querySelector('#param-name-input').focus();#}
         {#document.querySelector('#param-name-input').onkeyup = function(e) {#}
@@ -65,5 +70,13 @@
 
         };
     </script>
-</body>
-</html>
+    <h3> <br> Column translations</h3>
+{#    <div>{{  top5_old_csv | safe }}</div>#}
+    <h3> <br> Column translations</h3>
+
+
+
+{% endblock content %}
+
+{% block footcontent %}
+{%  endblock footcontent %}

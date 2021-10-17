@@ -1,0 +1,63 @@
+{% load static %}
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>
+        {% block title %}
+            Untitled Document
+        {% endblock title %}
+    </title>
+    <link href="{% static 'main.css' %}" rel="stylesheet" type="text/css">
+    {#    <link rel="stylesheet" type="text/css" href="{% static '../../../mystelleri/static/main.css' %}" > <!-- This will overwrite the links above, I'm pretty sure... -->#}
+
+</head>
+<body>
+{#    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>#}
+    <div id="wrapper">
+        <header id="header">
+            <nav id="nav">
+
+                <ul>
+                    <img src="{% static 'ss_logo.png' %}"height="25" alt="" id="logo"/><!-- Formerly div id=topbanner -->
+                    <li class="toptiles" ><a href="/index">Home</a></li>
+                    <li class="toptiles" ><a href="/startstop">Start/Stop</a></li>
+                    <li class="toptiles" ><a href="/configure">Configure Controllers</a></li>
+{#                    {% for page in page_list %}#}
+{#                    <li class="toptiles" ><a href="{{ page.permalink }}">#}
+{#                        {{ page.title }}#}
+{#                    </a></li>#}
+{#                    {% endfor %}#}
+{#                    <li class="loginout">#}
+{#                        {% if user.is_authenticated %}Happy logging, {{ user.username }}.<br/><a class="loginout" style="color: blue;" href="{% url 'logout' %}?next=/">Log out</a>#}
+{#                        {% else %}Not logged in.<br/><a class="loginout" style="color: blue" href="{% url 'login' %}?next=/"> Log in now</a>#}
+{#                        {% endif %}#}
+{#                    </li>#}
+
+                </ul>
+            </nav>
+        </header>
+        <aside id="leftsidebar">
+            <nav id="plotnav">
+                <ul>
+                    {% block plotnav %}
+                    Select an option from the menu ribbon at the top of the page. You must be logged in to access content.
+                    {% endblock plotnav %}
+                </ul>
+            </nav>
+
+        </aside>
+        <section id="main">
+            {% block content %}
+            <h1>Welcome!</h1>
+            <p>This is the site template</p>
+            {% endblock content %}
+        </section>
+        <footer id="footer">
+            {% block footcontent %}
+            {% endblock footcontent %}
+            Copyright &copy; 2021 Stelleri Solutions L.L.C.
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,27 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Select a Chat Room</title>
-</head>
-<body>
-    What chat room would you like to enter?<br>
-    <input id="room-name-input" type="text" size="100"><br>
-    <input id="room-name-submit" type="button" value="Enter">
+{% extends "base.html" %}
+{#{% load staticfiles %}#}
 
-    <script>
-        document.querySelector('#room-name-input').focus();
-        document.querySelector('#room-name-input').onkeyup = function(e){
-            if (e.keyCode == 13) { //enter, return
-                document.querySelector('#room-name-submit').click();
-            }
-        };
+{% block title %}Home Page{% endblock title %}
 
-        document.querySelector('#room-name-submit').onclick = function(e) {
-            var roomName = document.querySelector('#room-name-input').value;
-            window.location.pathname = '/stelleri/' + roomName + '/';
-        };
+{% block plotnav %}
+    Please select a file for upload in .csv format.
+{% endblock plotnav %}
 
-    </script>
-</body>
-</html>
+<!-- Display the main area of the page -->
+{% block content %}
+
+
+
+    <h3> <br> Column translations</h3>
+{#    <div>{{  top5_old_csv | safe }}</div>#}
+    <h3> <br> Column translations</h3>
+
+
+
+{% endblock content %}
+
+{% block footcontent %}
+{%  endblock footcontent %}

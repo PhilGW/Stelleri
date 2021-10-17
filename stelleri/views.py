@@ -8,5 +8,5 @@ def room(request, room_name):
         'room_name': room_name
     })
 
-def controller_update(request):
-    return render(request, 'stelleri/controller_update.html')
+def configure_controller(request):
+    return render(request, 'stelleri/configure.html')
